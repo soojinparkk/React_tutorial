@@ -3,13 +3,18 @@ import React, { Component } from 'react';
 import './App.css';
 import Subject from './components/Subject'
 import Nav from './components/Nav'
-import Content from './components/Content'
+import Control from './components/Control'
+import ReadContent from './components/ReadContent'
+import CreateContent from './components/CreateContent'
 
 
 // class 방식
 class App extends Component {
   constructor(props) {
     super(props);
+
+    this.max_content_id = 3;
+    
     this.state = {
       mode:'welcome',
       selected_content_id:1,
@@ -25,9 +30,13 @@ class App extends Component {
 
   render() {
     var _title, _desc = null;
+    var _article = null;
     if (this.state.mode === 'welcome') {
       _title = this.state.welcome.title;
       _desc = this.state.welcome.desc;
+
+      _article = <ReadContent title={_title} desc={_desc}></ReadContent>
+
     } else if (this.state.mode === 'read') {
       var i = 0;
       while(i < this.state.contents.length) {
@@ -39,6 +48,26 @@ class App extends Component {
         }
         i++;
       }
+      _article = <ReadContent title={_title} desc={_desc}></ReadContent>
+
+    } else if (this.state.mode === 'create') {
+      _article = <CreateContent onSubmit={function(_title, _desc){
+        this.max_content_id++;
+        // add content to this.state.contents
+        // push: 원본에 새로운 데이터 추가
+        // concat: 원본은 그대로, 새로운 데이터 추가한 배열 return
+        //      -> 원본 불변함 (immutable)
+        // Array.from(배열): 해당 배열 복제
+        //      -> 변수에 복제본을 저장한 후 push하면 concat과 같은 결과
+        // Object.assign(객체): 해당 객체 복제
+        //      -> ex) Object.assgin({}, obj) or Object.assign({plus:1, minus:2}, obj)
+        var _contents = this.state.contents.concat(
+          {id:this.max_content_id, title:_title, desc:_desc}
+        );
+        this.setState({
+          contents:_contents
+        });
+      }.bind(this)}></CreateContent>
     }
 
     return (
@@ -64,7 +93,16 @@ class App extends Component {
 
         <br></br>
 
-        <Content title={_title} desc={_desc}></Content>
+        <Control onChangeMode={function(_mode){
+          this.setState({
+            mode:_mode
+          });
+        }.bind(this)}></Control>
+
+        <br></br>
+
+        {_article}
+
       </div>
     );
   }
