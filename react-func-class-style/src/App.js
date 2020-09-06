@@ -2,11 +2,21 @@ import React, {useState, useEffect} from 'react';
 import './App.css';
 
 function App() {
+  var [funcShow, setFuncShow] = useState(true);
+  var [classShow, setClassShow] = useState(true);
+
   return (
     <div className="container">
       <h1>Hello World</h1>
-      <FuncComp initNum={2}></FuncComp>
-      <ClassComp initNum={2}></ClassComp>
+      <input type="button" value="remove func" onClick={function(){
+        setFuncShow(false);
+      }}></input>
+      <input type="button" value="remove class" onClick={function(){
+        setClassShow(false);
+      }}></input>
+
+      {funcShow ? <FuncComp initNum={2}></FuncComp> : null}
+      {classShow ? <ClassComp initNum={2}></ClassComp> : null}
     </div>
   );
 }
@@ -58,7 +68,8 @@ function FuncComp(props) {
   // useEffect 사용 방법(2)
   // componentDidMount -> 최초 생성 후 한번만 실행
   // useEffect 두번째 인자로 빈 배열 할당하면 최초 한번 실행
-  // 이 때, cleadup == componentWillUnmount 같은 기능 실행
+  // 이 때, cleanup == componentWillUnmount 같은 기능 실행
+  // cleanup -> component 소멸될 때 호출
   useEffect(function(){
     console.log("%cfunc => useEffect (componentDidMount)" + (++funcId), funcStyle);
     document.title = number;
@@ -118,6 +129,10 @@ class ClassComp extends React.Component {
 
   componentDidUpdate(newProps, newState) {
     console.log("%cclass => componentDidUpdate", classStyle);
+  }
+
+  componentWillUnmount() {
+    console.log("%cclass => componentWillUnmount", classStyle);
   }
 
   render() {
