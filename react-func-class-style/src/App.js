@@ -29,17 +29,45 @@ function FuncComp(props) {
   // var _date = dateState[0];
   // var setDate = dateState[1];
 
-  // useState 사용 방법 (2)
+  // useState 사용 방법(2)
   var [_date, setDate] = useState((new Date()).toString());
+
 
   // React.useEffect(함수) -> side effect
   // 첫번째 인자 함수: render 끝난 후 호출
-  // componentDidMount & componentDidUpdate 같은 기능
+  // 두번째 인자 배열
+  // == componentDidMount & componentDidUpdate
   // 여러개 사용 가능
+  // useEffect 사용 방법(1)
   useEffect(function(){
-    console.log("%cfunc => useEffect " + (++funcId), funcStyle);
-    document.title = number + ' : '+ _date;
-  });
+    console.log("%cfunc => useEffect (componentDidMount & componentDidUpdate)" + (++funcId), funcStyle);
+    // 밑의 코드처럼 render 호출 후 외부 환경 변경에 주로 사용
+    document.title = number;
+
+    // useEffect cleanup 기능 (이전 component 정리 작업)
+    // 호출 순서: render -> useEffect return(cleanup) -> useEffect
+    return function cleanup(){
+      console.log("%cfunc => useEffect cleanup " + (++funcId), funcStyle);
+    }
+  }, [number]);
+  // 위의 배열 안의 값이 변했을 때만 callback으로 해당 함수 호출
+  // 변한 값에 대해서만 호출을 하기 때문에 성능 좋음
+  // == componentDidUpdate
+
+
+  // useEffect 사용 방법(2)
+  // componentDidMount -> 최초 생성 후 한번만 실행
+  // useEffect 두번째 인자로 빈 배열 할당하면 최초 한번 실행
+  // 이 때, cleadup == componentWillUnmount 같은 기능 실행
+  useEffect(function(){
+    console.log("%cfunc => useEffect (componentDidMount)" + (++funcId), funcStyle);
+    document.title = number;
+
+    return function cleanup(){
+      console.log("%cfunc => useEffect cleanup (componentWillUnmount)" + (++funcId), funcStyle);
+    }
+  }, []);
+
 
   console.log("%cfunc => render " + (++funcId), funcStyle);
   return (
