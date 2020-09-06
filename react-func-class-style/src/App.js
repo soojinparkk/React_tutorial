@@ -11,6 +11,9 @@ function App() {
   );
 }
 
+
+var funcStyle = 'color:blue';
+var funcId = 0;
 function FuncComp(props) {
   // React.useState(state의 초기값): 두 개의 값을 가진 배열 return
   // 첫번째 값: 상태값 -> 초기값으로 설정 가능
@@ -29,6 +32,7 @@ function FuncComp(props) {
   // useState 사용 방법 (2)
   var [_date, setDate] = useState((new Date()).toString());
 
+  console.log("%cfunc => render" + (++funcId), funcStyle);
   return (
     <div className="container">
       <h2>function style component</h2>
@@ -48,13 +52,39 @@ function FuncComp(props) {
   );
 }
 
+
+var classStyle = 'color:red'
 class ClassComp extends React.Component {
   state = {
     number:this.props.initNum,
     date:(new Date()).toString()
   }
 
+  // render 호출 전 component가 생성되기 전에 해야할 일
+  componentWillMount() {
+    console.log("%cclass => componentWillMount", classStyle);
+  }
+
+  // render 호출 후 component가 그려진 후에 해야할 일
+  componentDidMount() {
+    console.log("%cclass => componentDidMount", classStyle);
+  }
+
+  shouldComponentUpdate(newProps, newState) {
+    console.log("%cclass => shouldComponentUpdate", classStyle);
+    return true;
+  }
+
+  componentWillUpdate(newProps, newState) {
+    console.log("%cclass => componentWillUpdate", classStyle);
+  }
+
+  componentDidUpdate(newProps, newState) {
+    console.log("%cclass => componentDidUpdate", classStyle);
+  }
+
   render() {
+    console.log("%cclass => render", classStyle);
     return (
       <div className="container">
         <h2>class style component</h2>
