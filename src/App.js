@@ -81,7 +81,7 @@ class App extends Component {
       _data = this.getReadMode();
       _article = <UpdateContent data={_data} onSubmit={function(_id, _title, _desc){
         var _contents = Array.from(this.state.contents);
-        
+
         var i = 0;
         while(i < _contents.length) {
           if (_contents[i].id === _id) {
@@ -125,9 +125,31 @@ class App extends Component {
         <br></br>
 
         <Control onChangeMode={function(_mode){
-          this.setState({
-            mode:_mode
-          });
+          if (_mode === 'delete') {
+            // window.confirm(): 확인창
+            // 확인 -> true return
+            // 취소 -> false return
+            if (window.confirm('Really?')) {
+              var _contents = Array.from(this.state.contents)
+              var i = 0;
+              while(i < _contents.length) {
+                if (_contents[i].id === this.state.selected_content_id) {
+                  _contents.splice(i, 1);
+                  break;
+                }
+                i++;
+              }
+              this.setState({
+                mode:'welcome',
+                contents:_contents
+              });
+              alert('deleted');
+            }
+          } else {
+            this.setState({
+              mode:_mode
+            });
+          }
         }.bind(this)}></Control>
 
         <br></br>
