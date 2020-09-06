@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import './App.css';
 
 function App() {
@@ -16,8 +16,8 @@ var funcStyle = 'color:blue';
 var funcId = 0;
 function FuncComp(props) {
   // React.useState(state의 초기값): 두 개의 값을 가진 배열 return
-  // 첫번째 값: 상태값 -> 초기값으로 설정 가능
-  // 두번째 값: 상태를 바꿀 수 있는 함수
+  // return 배열 첫번째 값: 상태값 -> 초기값으로 설정 가능
+  // return 배열 두번째 값: 상태를 바꿀 수 있는 함수
   //            -> class의 setState 기능을 가진 함수
   // state 만들 때마다 useState() 사용
   var numberState = useState(props.initNum);
@@ -32,7 +32,16 @@ function FuncComp(props) {
   // useState 사용 방법 (2)
   var [_date, setDate] = useState((new Date()).toString());
 
-  console.log("%cfunc => render" + (++funcId), funcStyle);
+  // React.useEffect(함수) -> side effect
+  // 첫번째 인자 함수: render 끝난 후 호출
+  // componentDidMount & componentDidUpdate 같은 기능
+  // 여러개 사용 가능
+  useEffect(function(){
+    console.log("%cfunc => useEffect " + (++funcId), funcStyle);
+    document.title = number + ' : '+ _date;
+  });
+
+  console.log("%cfunc => render " + (++funcId), funcStyle);
   return (
     <div className="container">
       <h2>function style component</h2>
